@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Monthly Engagement Report</title>
+    <style>
+        /* Add some styles for the report */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        table th,
+        table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .blog-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        /* Styles for the cover page */
+        .cover {
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .cover h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .cover p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .cover img {
+            max-width: 100%;
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Cover page -->
+    <article class="cover">
+        <h1>Monthly Engagement Report</h1>
+        <p>Dear {{ user.username }},</p>
+        <p>Here's your monthly engagement report for {{ month }}/{{year}}:</p>
+    </article>
+    <!-- Metrics page -->
+    <article class="page-break">
+        <h1>Monthly Metrics</h1>
+        <table>
+            <tr>
+                <th>Metrics</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Total Followings</td>
+                <td>{{ user.following | length }}</td>
+            </tr>
+            <tr>
+                <td>Total Followers</td>
+                <td>{{ user.followers | length }}</td>
+            </tr>
+            <tr>
+                <td>Total Posts Created</td>
+                <td>{{ blogs | length }}</td>
+            </tr>
+        </table>
+        <br>
+        <p>Thank you for your engagement!</p>
+        <p>Best regards,<br />Blog Lite Team</p>
+    </article>
+</body>

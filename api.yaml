@@ -1,0 +1,1027 @@
+openapi: 3.0.0
+info:
+  description: 
+    "
+    Blog Lite APIs is collection of RESTful APIs that can be used to interact with the backend database of Blog Lite Application.
+  
+  
+    **Blog Lite Application** is project undertaken to fulfill the course requirement of **Modern Application Development-II (MAD-II)**  in  *BS in Data Sciene and its Application* degree offered by **Indian Institute of Technology, Madras**.
+  
+    
+  
+    All Copyrights reserved
+    <br><br>
+    <div>
+    <h3> Designed by Rohit Kumar, 21F1001368 <h3>
+    </div>
+    
+    "
+  version: 1.0.0
+  title: Blog Lite API
+  
+  contact:
+    name: Rohit Kumar
+    email: 21f1001368@student.onlinedegree.iitm.ac.in
+
+servers:
+  - url: 'http://127.0.0.1:8000'
+
+tags:
+  - name: "Authentication"
+    description: "APIs to Login, Logout, and Register Users  "
+  - name: "User"
+    description: "CRUD APIs for User Model"
+  - name: "BLOG"
+    description: "CRUD APIs for BLOG Model"
+  - name: "Follower"
+    description: "CRUD APIs for Followings and Unfollowing Users"
+  - name: "Utils"
+    description: 'APIS to handle Tasks and Jobs'
+
+
+paths:
+  "/login":
+    description: End point to retrive authentication token for user
+    post:
+      operationId: "LOGIN_AND_GET_AUTH_TOKEN"
+      tags:
+        - Authentication
+      description: "Sends POST request to retrive authentication token for user from backend"
+      parameters:
+        - in: query
+          name: include_auth_token
+          required: true
+          schema:
+            type: boolean
+            example: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                  email:
+                    type: string
+                    example: inteli3rohit@gmail.com
+                  password:
+                    type: string
+                    example: "rohit@2306"
+      responses:
+        '200':
+          description: Login Success
+          content:
+            application/json:
+              schema:
+                title: user object
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 200
+                  response:
+                    type: object
+                    properties:
+                      csrf_token:
+                        type: string
+                        example: "ImFiM2RjODY4NTMyNjI1NZI3NjcwMDEwMGU2YTBhZDVjNzY1ZjQ2YTki.ZC3cJA.C8P3rKOo8QgKNpiW77Ru5NdobXg"
+                      user:
+                        type: object
+                        properties:
+                          authentication_token:
+                            type: string
+                            example: "WyJlN2VlYWywMDYxYmM9OGMxODFjNDEzZDcyMTU0NzMzMSJd.ZC3cJA.rDL8zMg3_qz-nIUHt7GTktBQoyE"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                title: user object
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 400
+                  response:
+                    type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          type: string
+                          example:
+                            - Invalid Password
+                            - Invalid Email ID
+                      field_errors:
+                        type: object
+                        properties:
+                          password:
+                            type: array
+                            items:
+                              type: string
+                              example:
+                                - Invalid Password
+                          username:
+                            type: array
+                            items:
+                              type: string
+                              example:
+                                - Invalid Username
+        '500':
+          description: Internal Server Error
+  "/register":
+    description: End point to register user
+    post:
+      operationId: "REGISTER_USER"
+      tags:
+        - User
+      description: "Sends POST request to register new user at the backend"
+      parameters:
+        - in: query
+          name: include_auth_token
+          required: true
+          schema:
+            type: boolean
+            example: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                  username:
+                    type: string
+                    example: rohitrk0600
+                  email:
+                    type: string
+                    example: inteli3rohit@gmail.com
+                  password:
+                    type: string
+                    example: "rohit@2306"
+      responses:
+        '200':
+          description: Successfully registered
+          content:
+            application/json:
+              schema:
+                title: user object
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 200
+                  response:
+                    type: object
+                    properties:
+                      csrf_token:
+                        type: string
+                        example: "ImFiM2RjODY4NTMyNjI1NZI3NjcwMDEwMGU2YTBhZDVjNzY1ZjQ2YTki.ZC3cJA.C8P3rKOo8QgKNpiW77Ru5NdobXg"
+                      user:
+                        type: object
+                        properties:
+                          authentication_token:
+                            type: string
+                            example: "WyJlN2VlYWywMDYxYmM9OGMxODFjNDEzZDcyMTU0NzMzMSJd.ZC3cJA.rDL8zMg3_qz-nIUHt7GTktBQoyE"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                title: user object
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 400
+                  response:
+                    type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          type: string
+                          example:
+                            - Username not Provided
+                            - Password should be atleat 8 characters
+                      field_errors:
+                        type: object
+                        properties:
+                          password:
+                            type: array
+                            items:
+                              type: string
+                              example:
+                                - Password should be atleat 8 characters
+                          username:
+                            type: array
+                            items:
+                              type: string
+                              example:
+                                - Username not Provided
+        '500':
+          description: Internal Server Error
+          
+  "/logout":
+    description: End point to retrive authentication token for user
+    post:
+      operationId: "logout"
+      tags:
+        - Authentication
+      description: "Sends POST request to backend to logout the user from application"
+      responses:
+        '200':
+          description: Logout Success
+          content:
+            application/json:
+              schema:
+                title: user object
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 200
+                  response:
+                    type: object
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                title: user object
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        example: 400
+                  response:
+                    type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          type: string
+                          example:
+                            - Invalid Password
+                            - Invalid Email ID
+                      field_errors:
+                        type: object
+                        properties:
+                          password:
+                            type: array
+                            items:
+                              type: string
+                              example:
+                                - Invalid Password
+                          username:
+                            type: array
+                            items:
+                              type: string
+                              example:
+                                - Invalid Username
+        '500':
+          description: Internal Server Error
+          
+  "/api/logged_user":
+    description: End point to read, update user profile of current user logged into backend.
+    get:
+      operationId: "CURRENT_USER_GET"
+      tags:
+        - User
+      description: "Operation to get user  profile of current user logged into backend"
+      parameters:
+        - in: header
+          name: Authentication-Token
+          required: true
+          schema:
+            type: string
+            example: "WyJjOTMzMjE2ODc4NzI0MmZiYTAzMzYwNWI0MGZjMTI4OCJd.ZC3gaA.RDnO0oHV-jPCihMu2WAPV4pItfI"
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user"
+        '401':
+          description : Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiRespose404"
+        '404':
+          description: Bad Request
+        
+        '500':
+          description: Internal Server Error
+  
+  "/api/user":
+    description: End point to read, update  all user profile from User resource 
+    get:
+      operationId: "USERS_PROFILE_GET"
+      tags:
+        - User
+      description: "Operation to get user profile from USER resource with provided userid. "
+      parameters:
+        - in: header
+          name: Authentication-Token
+          required: true
+          schema:
+            type: string
+            example: "WyJjOTMzMjE2ODc4NzI0MmZiYTAzMzYwNWI0MGZjMTI4OCJd.ZC3gaA.RDnO0oHV-jPCihMu2WAPV4pItfI"
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/users"
+        '401':
+          description : Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiRespose404"
+        '404':
+          description : Bad Request
+        
+        '500':
+          description: Internal Server Error
+  
+  '/api/user/{user_id}':
+     description: End point to read user profile from User resource with user_id = userId.
+     get:
+      operationId: "USER_PROFILE_GET"
+      tags:
+        - User
+      description: "Operation to get user profile from USER resource with provided userid. "
+      parameters:
+        - in: header
+          name: Authentication-Token
+          required: true
+          schema:
+            type: string
+            example: "WyJjOTMzMjE2ODc4NzI0MmZiYTAzMzYwNWI0MGZjMTI4OCJd.ZC3gaA.RDnO0oHV-jPCihMu2WAPV4pItfI"
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user"
+        '401':
+          description : Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiRespose404"
+        '404':
+          description : Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                    example: 'INVUSER01'
+                  error_message:
+                    type: string
+                    example: "User doesn't exist"
+        '500':
+          description: Internal Server Error
+  
+  '/api/user/follow/{userId}/{followerUserId}':
+    post:
+      operationId: "FOLLOW_USER"
+      tags:
+        - Follower
+      description: 'Operation to follow user'
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+            example: 2
+          
+        - in: path
+          name: followerUserId
+          required: true
+          schema:
+            type: integer
+            example: 3
+        
+        - in: header
+          name: Authentication-Token
+          required: true
+          schema:
+            type: string
+            example: "WyJjOTMzMjE2ODc4NzI0MmZiYTAzMzYwNWI0MGZjMTI4OCJd.ZC3gaA.RDnO0oHV-jPCihMu2WAPV4pItfI"
+      responses:
+        '200':
+          description: Request Successful
+          
+        '401':
+          description : Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiRespose404"
+        '404':
+          description : Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                    example: 'INVUSER01'
+                  error_message:
+                    type: string
+                    example: "User doesn't exist"
+        '500':
+          description: Internal Server Error
+  '/api/user/unfollow/{userId}/{followerUserId}':
+    post:
+      operationId: "UNFOLLOW_USER"
+      tags:
+        - Follower
+      description: 'Operation to unfollow user'
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+            example: 2
+          
+        - in: path
+          name: followerUserId
+          required: true
+          schema:
+            type: integer
+            example: 3
+        
+        - in: header
+          name: Authentication-Token
+          required: true
+          schema:
+            type: string
+            example: "WyJjOTMzMjE2ODc4NzI0MmZiYTAzMzYwNWI0MGZjMTI4OCJd.ZC3gaA.RDnO0oHV-jPCihMu2WAPV4pItfI"
+      responses:
+        '200':
+          description: Request Successful
+          
+        '401':
+          description : Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiRespose404"
+        '404':
+          description : Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                    example: 'INVUSER01'
+                  error_message:
+                    type: string
+                    example: "User doesn't exist"
+        '500':
+          description: Internal Server Error
+  '/api/export/{userId}':
+    get:
+      operationId: "EXPORT_JOB"
+      tags:
+        - Utils
+      description: 'Operation to export blogs by user in csv file'
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+            example: 2
+        
+        - in: header
+          name: Authentication-Token
+          required: true
+          schema:
+            type: string
+            example: "WyJjOTMzMjE2ODc4NzI0MmZiYTAzMzYwNWI0MGZjMTI4OCJd.ZC3gaA.RDnO0oHV-jPCihMu2WAPV4pItfI"
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task_id:
+                    type: string
+                    example: 'safdasdf-adfasdf-dafdsfas-asdfas'
+                  task_status:
+                    type: string
+                    example: 'SUCCESS'
+                  task_result:
+                    type: string
+          
+        '401':
+          description : Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiRespose404"
+        '404':
+          description : Bad Request
+          
+        '500':
+          description: Internal Server Error
+          
+  "/api/export_status":
+    post:
+      operationId: "JOB_STATUS"
+      tags:
+        - Utils
+      description: 'Operation to check status of an celery job'
+      parameters:
+        - in: header
+          name: Authentication-Token
+          required: true
+          schema:
+            type: string
+            example: "WyJjOTMzMjE2ODc4NzI0MmZiYTAzMzYwNWI0MGZjMTI4OCJd.ZC3gaA.RDnO0oHV-jPCihMu2WAPV4pItfI"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                  task_id:
+                    type: string
+                    example: 'safdasdf-adfasdf-dafdsfas-asdfas'
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task_id:
+                    type: string
+                    example: 'safdasdf-adfasdf-dafdsfas-asdfas'
+                  task_status:
+                    type: string
+                    example: 'SUCCESS'
+                  task_result:
+                    type: string
+          
+        '401':
+          description : Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiRespose404"
+        '404':
+          description : Bad Request
+          
+        '500':
+          description: Internal Server Error
+  '/api/user/{userId}/blog':
+    post:
+      operationId: "NEW_BLOG"
+      tags:
+        - BLOG
+      description: 'Operation to create new blog post in BLOG model'
+      parameters:
+        - in: header
+          name: Authentication-Token
+          required: true
+          schema:
+            type: string
+            example: "WyJjOTMzMjE2ODc4NzI0MmZiYTAzMzYwNWI0MGZjMTI4OCJd.ZC3gaA.RDnO0oHV-jPCihMu2WAPV4pItfI"
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+            example: 3
+      requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                    title:
+                      type: string
+                      example: 'BLOG Title'
+                    description:
+                      type: string
+                      example: 'lorem asdfu adfasdf adfdin'
+                    images:
+                      type: string
+                      format: binary
+      responses:
+        '200':
+          description: Request Successful
+          
+        '401':
+          description : Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiRespose404"
+        '404':
+          description : Bad Request
+          
+        '500':
+          description: Internal Server Error
+  '/api/user/{userId}>/blog/{blogID}':
+    put:
+      operationId: "EDIT_BLOG"
+      tags:
+        - BLOG
+      description: 'Operation to edit new blog post in BLOG model'
+      parameters:
+        - in: header
+          name: Authentication-Token
+          required: true
+          schema:
+            type: string
+            example: "WyJjOTMzMjE2ODc4NzI0MmZiYTAzMzYwNWI0MGZjMTI4OCJd.ZC3gaA.RDnO0oHV-jPCihMu2WAPV4pItfI"
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+            example: 3
+        - in: path
+          name: blogID
+          required: true
+          schema:
+            type: integer
+            example: 6
+      requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    title:
+                      type: string
+                      example: 'BLOG Title'
+                    description:
+                      type: string
+                      example: 'lorem asdfu adfasdf adfdin'
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/blog"
+                  
+        '401':
+          description : Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiRespose404"
+        '404':
+          description : Bad Request
+          
+        '500':
+          description: Internal Server Error
+    delete:
+      operationId: "DELETE_BLOG"
+      tags:
+        - BLOG
+      description: 'Operation to delete new blog post in BLOG model'
+      parameters:
+        - in: header
+          name: Authentication-Token
+          required: true
+          schema:
+            type: string
+            example: "WyJjOTMzMjE2ODc4NzI0MmZiYTAzMzYwNWI0MGZjMTI4OCJd.ZC3gaA.RDnO0oHV-jPCihMu2WAPV4pItfI"
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+            example: 3
+        - in: path
+          name: blogID
+          required: true
+          schema:
+            type: integer
+            example: 6
+      responses:
+        '200':
+          description: Request Successful
+                  
+        '401':
+          description : Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiRespose404"
+        '404':
+          description : Bad Request
+          
+        '500':
+          description: Internal Server Error
+  '/api/search':
+    post:
+      operationId: "SEARCH_USER"
+      tags:
+        - Utils
+      description: 'Operation to Search Users with Search Parameter'
+      parameters:
+        - in: header
+          name: Authentication-Token
+          required: true
+          schema:
+            type: string
+            example: "WyJjOTMzMjE2ODc4NzI0MmZiYTAzMzYwNWI0MGZjMTI4OCJd.ZC3gaA.RDnO0oHV-jPCihMu2WAPV4pItfI"
+      requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    search_param:
+                      type: string
+                      example: 'rohit'
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/users"
+        '401':
+          description : Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiRespose404"
+        '404':
+          description : Bad Request
+          
+        '500':
+          description: Internal Server Error
+  '/api/welcomeMail':
+    post:
+      operationId: "SEND_MAIL"
+      tags:
+        - Utils
+      description: 'Operation to send mail to new Users '
+      # parameters:
+      #   - in: header
+      #     name: Authentication-Token
+      #     required: true
+      #     schema:
+      #       type: string
+      #       example: "WyJjOTMzMjE2ODc4NzI0MmZiYTAzMzYwNWI0MGZjMTI4OCJd.ZC3gaA.RDnO0oHV-jPCihMu2WAPV4pItfI"
+      requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    username:
+                      type: string
+                      example: 'rohitkumar'
+                    email:
+                      type: string
+                      example: 'rohitkumar@gmail.com'
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task_id:
+                    type: string
+                    example: 'safdasdf-adfasdf-dafdsfas-asdfas'
+                  task_status:
+                    type: string
+                    example: 'PENDING'
+                  task_result:
+                    type: string
+        '401':
+          description : Not Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiRespose404"
+        '404':
+          description : Bad Request
+          
+        '500':
+          description: Internal Server Error
+components:
+  schemas:
+    ApiRespose404:
+        type: object
+        properties:
+          meta:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 401
+          response:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: string
+                  example:
+                    - You are not authenticated. Please supply the correct credentials.
+    
+    b_media:
+      type: object
+      properties:
+        media_id:
+          type: integer
+          example: 2
+        blog_id: 
+          type: integer
+          example: 2
+        media_url: 
+          type: string
+          example: '/static/images/img1.jpg'
+    
+    likes:
+      type: object
+      properties:
+        likes_id:
+          type: integer
+          example: 1
+        blog_id:
+          type: integer
+          example: 3
+        user_id:
+          type: integer
+          example: 4
+    
+    c_media:
+      type: object
+      properties:
+        c_media_url:
+          type: integer
+          example: 1
+        commment_id: 
+          type: integer
+          example: 1
+        cmedia_url:
+          type: string
+          example: 'static/images/comment_img.jpg'
+    
+    comments:
+      type: object
+      properties:
+        comment_id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          example: 3
+        comment:
+          type: string
+          example: 'Woww amazing post'
+        c_media:
+          type: array
+          items:
+            $ref: '#/components/schemas/c_media'
+          
+    
+    blog:
+      type: object
+      properties:
+        blog_id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: 'Title of the Post'
+        description:
+          type: string
+          example: 'adf adsfajsdf asdfasdf dsafasdf'
+        user_id:
+          type: string
+          example: '1'
+        created:
+          type: string
+          example: '2021-03-13 05:00:00'
+        updated:
+          type: string
+          example: '2021-03-13 05:00:00'
+        b_media:
+          type: array
+          items:
+            $ref: '#/components/schemas/b_media'
+        likes:
+          type: array
+          items:
+            $ref: '#/components/schemas/likes'
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/comments'
+    
+    followers:
+      type: object
+      properties:
+        follower:
+          type: integer
+          example: 2
+    
+    following:
+      type: object
+      properties:
+        follower:
+          type: integer
+          example: 1
+          
+    user:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 10
+        username:
+          type: string
+          example: rohitrk0600
+        email:
+          type: string
+          example: inteli3rohit@gmail.com
+        blogs:
+          type: array
+          items:
+            $ref: '#/components/schemas/blogs'
+        following:
+          type: array
+          items:
+            $ref: '#/components/schemas/following'
+        followers:
+          type: array
+          items:
+            $ref: '#/components/schemas/followers'
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/comments'
+            
+    users:
+      type: array
+      items:
+        $ref: '#/components/schemas/user'
+    
+    blogs:
+      type: array
+      items:
+        $ref: '#/components/schemas/blog'
+    
+
+  
+    
+    
+  
+  
+  
+  

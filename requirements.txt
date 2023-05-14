@@ -1,0 +1,13 @@
+flask
+flask-security-too
+flask-restful
+flask-cors
+flask-sqlalchemy
+sqlalchemy
+flask-bcrypt
+flask-bleach
+redis
+celery[redis]
+requests
+Flask-Caching
+weasyprint
