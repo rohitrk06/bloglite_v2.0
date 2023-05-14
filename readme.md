@@ -6,7 +6,6 @@
 
 # Instruction to run the applications
 
-- Unzip the folder
 - Install all the required python modules from `requirement.txt` using the following command `pip install -r requirements.txt`
 - Ensure you have linux environment setup in your system.
 - Keep Celery and redis installed in linux environment.
